@@ -8,13 +8,15 @@ import random
 from module.tta import tta, Scale
 from module.viz import VisualizeSegmm
 
+
+
 er.registry.register_all()
 
 
 def evaluate_cls_fn(self, test_dataloader, config=None):
     self.model.eval()
-    classes = self.model.module.config.classes if self.model.module.config.classes != 1 else 2
-    metric_op = er.metric.PixelMetric(classes, logdir=self._model_dir, logger=self.logger)
+    classes = self.model.config.classes if self.model.config.classes != 1 else 2
+    metric_op = er.metric.PixelMetric(classes, logdir=self._model_dir, logger=self.logger) #Calculate the evaluation index at pixel level
 
     vis_dir = os.path.join(self._model_dir, 'vis-{}'.format(self.checkpoint.global_step))
 
@@ -26,7 +28,7 @@ def evaluate_cls_fn(self, test_dataloader, config=None):
             img = img.to(torch.device('cuda'))
             y_true = gt['cls']
             y_true = y_true.cpu()
-            if config.get('tta', False):
+            if config.get('tta', False):              #Test Time Augmentation
                 pred = tta(self.model, img, tta_config=[
                     Scale(scale_factor=0.5),
                     Scale(scale_factor=0.75),
@@ -67,6 +69,6 @@ def seed_torch(seed=2333):
 
 
 if __name__ == '__main__':
-    seed_torch(2333)
-    trainer = er.trainer.get_trainer('th_amp_ddp')()
+    seed_torch(2333)              # improve the reproducibility of experiments
+    trainer = er.trainer.get_trainer('base')()
     trainer.run(after_construct_launcher_callbacks=[register_evaluate_fn])

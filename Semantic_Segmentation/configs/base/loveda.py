@@ -30,8 +30,8 @@ data = dict(
             ]),
             CV=dict(k=10, i=-1),
             training=True,
-            batch_size=16,
-            num_workers=2,
+            batch_size=2,
+            num_workers=0,
         ),
     ),
     test=dict(
@@ -79,13 +79,13 @@ learning_rate = dict(
     ))
 train = dict(
     forward_times=1,
-    num_iters=15000,
+    num_iters=50,
     eval_per_epoch=True,
     summary_grads=False,
     summary_weights=False,
-    distributed=True,
-    apex_sync_bn=True,
-    sync_bn=True,
+    distributed=False,
+    apex_sync_bn=False,
+    sync_bn=False,
     eval_after_train=True,
     log_interval_step=50,
     save_ckpt_interval_epoch=1000,

@@ -108,7 +108,7 @@ def som(loss, ratio=0.5, reduction='none'):
     num_hns = int(ratio * num_inst)
     # 2. select loss
     top_loss, _ = loss.reshape(-1).topk(num_hns, -1)
-    if reduction is 'none':
+    if reduction == 'none':
         return top_loss
     else:
         loss_mask = (top_loss != 0)

@@ -82,7 +82,7 @@ class LoveDA(Dataset):
     def __getitem__(self, idx):
         image = imread(self.rgb_filepath_list[idx])
         if len(self.cls_filepath_list) > 0:
-            mask = imread(self.cls_filepath_list[idx]).astype(np.long) -1
+            mask = imread(self.cls_filepath_list[idx]).astype(np.int64) -1
             if self.transforms is not None:
                 blob = self.transforms(image=image, mask=mask)
                 image = blob['image']
@@ -114,8 +114,7 @@ class LoveDALoader(DataLoader, ConfigurableMixin):
             else:
                 sampler = val_sampler
         else:
-            sampler = distributed.StepDistributedSampler(dataset) if self.config.training else SequentialSampler(
-                dataset)
+            sampler = None
 
         super(LoveDALoader, self).__init__(dataset,
                                        self.config.batch_size,

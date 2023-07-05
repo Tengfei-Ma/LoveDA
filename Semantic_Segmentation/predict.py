@@ -26,11 +26,12 @@ logger = logging.getLogger(__name__)
 er.registry.register_all()
 
 
-def predict_test(ckpt_path, config_path='base.hrnetw32', save_dir=''):
+def predict_test(ckpt_path, config_path, save_dir=''):
     os.makedirs(save_dir, exist_ok=True)
     cfg = import_config(config_path)
     statedict = torch.load(ckpt_path, map_location=lambda storage, loc: storage)
     model_state_dict = remove_module_prefix(statedict)
+    print(config_path)
     print('Load model!')
     test_dataloader = make_dataloader(cfg['data']['test'])
     model = make_model(cfg['model'])
